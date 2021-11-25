@@ -1,23 +1,37 @@
 // console.log("Teste de log");
 lsUsuario = [];
 function gravarUsuario() {
-    console.log("dentro da funcao-gravar");
+    // console.log("dentro da funcao-gravar");
     id = document.getElementById("id").value;
     nome = document.getElementById("nome").value;
     email = document.getElementById("email").value;
     url = `nome=${nome}&email=${email}`;
 
+    if(nome.trim() == ''){
+        alert('Erro no preenchimendo do nome.');
+        return ;
+    }
+
+    if(email.trim() == ''){
+        alert('Erro no preenchimendo do email.');
+        return ;
+    }
+
     const xhttp = new XMLHttpRequest();
     if (id == '') {
-        xhttp.open("POST", "https://qua-209030.herokuapp.com/demo/add?" + url);
+        xhttp.open("POST", "http://localhost:8080/demo/add?" + url);
     } else {
-        xhttp.open("PUT", `https://qua-209030.herokuapp.com/demo/update/${id}?${url}`);
+        xhttp.open("PUT", `http://localhost:8080/demo/update/${id}?${url}`);
     }
     xhttp.send();
     xhttp.onload = function () {
-        alert(this.responseText);
+        msg = this.responseText;
+        alert(msg);
         atualizarTabela();
-        limparCampos();
+        if(msg.substring(0,2) == 'Ok'){
+            limparCampos();
+        }
+        
     }
 }
 
@@ -29,7 +43,7 @@ function limparCampos() {
 
 function atualizarTabela() {
     const xhttp = new XMLHttpRequest();
-    xhttp.open("GET", "https://qua-209030.herokuapp.com/demo/all");
+    xhttp.open("GET", "http://localhost:8080/demo/all");
     xhttp.send();
     xhttp.onload = function () {
         lsUsuario = JSON.parse(this.responseText);
@@ -62,7 +76,7 @@ function apagarUsuario() {
     }
 
     const xhttp = new XMLHttpRequest();
-    xhttp.open("DELETE", "https://qua-209030.herokuapp.com/demo/delete/" + id);
+    xhttp.open("DELETE", "http://localhost:8080/demo/delete/" + id);
     xhttp.send();
     xhttp.onload = function () {
         alert(this.responseText);
